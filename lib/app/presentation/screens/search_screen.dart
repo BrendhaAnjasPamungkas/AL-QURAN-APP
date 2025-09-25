@@ -1,7 +1,9 @@
 // lib/app/presentation/screens/search_screen.dart
 
+import 'package:alquran/core/main_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:alquran/injection.dart';
 import '../controllers/surah_search_controller.dart'; // <-- Perhatikan import sudah diubah
 
 class SearchScreen extends StatelessWidget {
@@ -10,8 +12,8 @@ class SearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Memanggil controller dengan nama yang sudah diperbarui
-    final controller = Get.find<SurahSearchController>();
-    
+    final controller = sl<SurahSearchController>();
+
     const Color purpleColor = Color(0xFF672CBC);
     const Color greyColor = Color(0xFF8789A3);
 
@@ -44,7 +46,7 @@ class SearchScreen extends StatelessWidget {
         if (controller.searchResults.isEmpty) {
           return const Center(child: Text("Tidak ada hasil pencarian."));
         }
-        
+
         return ListView.separated(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           itemCount: controller.searchResults.length,
@@ -67,20 +69,31 @@ class SearchScreen extends StatelessWidget {
                 ),
                 child: Center(child: Text("${surah.nomor}")),
               ),
-              title: Text(surah.namaLatin,
-                  style: const TextStyle(fontWeight: FontWeight.w500)),
-              subtitle: Text(
-                "${surah.tempatTurun.toUpperCase()} - ${surah.jumlahAyat} AYAT",
-                style: const TextStyle(fontSize: 12, color: greyColor),
-              ),
-              trailing: Text(
-                surah.nama,
+              title: W.text(data: surah.namaLatin, fontWeight: FontWeight.w500),
+              // title: Text(surah.namaLatin,
+              //     style: const TextStyle(fontWeight: FontWeight.w500)),
+              subtitle: W.text(
+                  data:
+                      "${surah.tempatTurun.toUpperCase()} - ${surah.jumlahAyat} AYAT",
+                  fontSize: 12,
+                  color: greyColor),
+              // subtitle: Text(
+              //   "${surah.tempatTurun.toUpperCase()} - ${surah.jumlahAyat} AYAT",
+              //   style: const TextStyle(fontSize: 12, color: greyColor),
+              // ),
+              trailing: W.text(
+                data: surah.nama,
                 style: const TextStyle(
-                  fontFamily: 'LPMQ',
-                  fontSize: 20,
-                  color: purpleColor,
-                ),
+                    fontFamily: 'LPMQ', fontSize: 20, color: purpleColor),
               ),
+              // trailing: Text(
+              //   surah.nama,
+              //   style: const TextStyle(
+              //     fontFamily: 'LPMQ',
+              //     fontSize: 20,
+              //     color: purpleColor,
+              //   ),
+              // ),
             );
           },
         );

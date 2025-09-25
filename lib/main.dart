@@ -1,24 +1,18 @@
 // lib/main.dart
 
 import 'package:flutter/material.dart';
+import 'injection.dart' as di;
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-
-// Import yang sudah ada
-import 'app/presentation/bindings/detail_surah_binding.dart';
 import 'app/presentation/screens/detail_surah_screen.dart';
-import 'app/presentation/bindings/onboarding_binding.dart';
 import 'app/presentation/screens/onboarding_screen.dart';
-import 'app/presentation/bindings/dashboard_binding.dart';
 import 'app/presentation/screens/dashboard_screen.dart';
-
-// --- TAMBAHKAN DUA IMPORT YANG HILANG DI SINI ---
 import 'app/presentation/screens/search_screen.dart';
-import 'app/presentation/bindings/search_binding.dart';
-// --- BATAS PENAMBAHAN ---
+
 
 void main() async {
   await GetStorage.init();
+  di.init(); 
   runApp(const MyApp());
 }
 
@@ -36,21 +30,17 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: '/onboarding',
           page: () => const OnboardingScreen(),
-          binding: OnboardingBinding(),
         ),
         GetPage(
             name: '/dashboard',
-            page: () => const DashboardScreen(),
-            binding: DashboardBinding()),
+            page: () => const DashboardScreen(),),
         GetPage(
           name: '/detail-surah',
           page: () => const DetailSurahScreen(),
-          binding: DetailSurahBinding(),
         ),
         GetPage(
           name: '/search',
           page: () => const SearchScreen(),
-          binding: SearchBinding(),
         ), // <-- Saya ganti ')' menjadi ',' untuk konsistensi
       ],
     );

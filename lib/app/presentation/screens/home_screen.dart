@@ -1,16 +1,19 @@
 // lib/app/presentation/screens/home_screen.dart
 
+import 'package:alquran/core/main_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/home_controller.dart';
+import 'package:alquran/injection.dart';
 
-class HomeScreen extends GetView<HomeController> {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     const Color purpleColor = Color(0xFF672CBC);
     const Color greyColor = Color(0xFF8789A3);
+    final controller = sl<HomeController>();
 
     // HANYA RETURN KONTENNYA, TANPA SCAFFOLD
     return SafeArea(
@@ -23,34 +26,43 @@ class HomeScreen extends GetView<HomeController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 16), // Beri jarak dari atas
-                  const Text(
-                    "Asslamualaikum",
-                    style: TextStyle(fontSize: 18, color: greyColor),
-                  ),
+                  W.text(
+                      data: "Assalamualaikum",
+                      fontSize: 18,
+                      color: Colors.grey),
+                  // const Text(
+                  //   "Assalamualaikum",
+                  //   style: TextStyle(fontSize: 18, color: greyColor),
+                  // ),
                   const SizedBox(height: 4),
-                  const Text(
-                    "Bren",
-                    style: TextStyle(
+                  W.text(
+                      data: "Bren",
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF240F4F),
-                    ),
-                  ),
+                      color: Colors.black),
+                  // const Text(
+                  //   "Bren",
+                  //   style: TextStyle(
+                  //     fontSize: 24,
+                  //     fontWeight: FontWeight.bold,
+                  //     color: Color(0xFF240F4F),
+                  //   ),
+                  // ),
                   const SizedBox(height: 24),
                   // Panggil method build LastReadCard
-                  _buildLastReadCard(purpleColor),
+                  buildLastReadCard(purpleColor, controller),
                 ],
               ),
             )
           ],
-          body: _buildSurahList(greyColor),
+          body: buildSurahList(greyColor, controller),
         ),
       ),
     );
   }
 
   // Widget untuk kartu Last Read
-  Widget _buildLastReadCard(Color purpleColor) {
+  Widget buildLastReadCard(Color purpleColor, HomeController controller) {
     return Obx(() {
       final lastRead = controller.lastReadSurah;
       if (lastRead.isEmpty) {
@@ -92,36 +104,47 @@ class HomeScreen extends GetView<HomeController> {
             Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Image.asset("assets/icons/readme.png",
-                          width: 20,
-                          height: 20,
-                          color: Colors.white), // Beri warna putih
-                      const SizedBox(width: 8),
-                      const Text(
-                        "Last Read",
-                        style: TextStyle(color: Colors.white),
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 20), // Jarak vertikal
-                  Text(
-                    "${lastRead['nama']}",
-                    style: const TextStyle(
-                        color: Colors.white,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Image.asset("assets/icons/readme.png",
+                            width: 20,
+                            height: 20,
+                            color: Colors.white), // Beri warna putih
+                        const SizedBox(width: 8),
+                        const Text(
+                          "Last Read",
+                          style: TextStyle(color: Colors.white),
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 20), // Jarak vertikal
+                    W.text(
+                        data: "${lastRead['nama']}",
+                        style: const TextStyle(color: Colors.white),
                         fontSize: 18,
                         fontWeight: FontWeight.w600),
+
+                    // Text(
+                    //   "${lastRead['nama']}",
+                    //   style: const TextStyle(
+                    //       color: Colors.white,
+                    //       fontSize: 18,
+                    //       fontWeight: FontWeight.w600),
+                    // ),
+                    const SizedBox(height: 4),
+                    W.text(
+                      data: "Ayat No: ${lastRead['ayat']}",
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ]
+                  //   Text(
+                  //     "Ayat No: ${lastRead['ayat']}",
+                  //     style: const TextStyle(color: Colors.white),
+                  //   ),
+                  // ],
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    "Ayat No: ${lastRead['ayat']}",
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ],
-              ),
             )
           ],
         ),
@@ -130,7 +153,7 @@ class HomeScreen extends GetView<HomeController> {
   }
 
   // Widget untuk daftar Surah
-  Widget _buildSurahList(Color greyColor) {
+  Widget buildSurahList(Color greyColor, HomeController controller) {
     return DefaultTabController(
       length: 4, // Surah, Para, Page, Hijb
       child: Column(
@@ -170,28 +193,41 @@ class HomeScreen extends GetView<HomeController> {
                           width: 40,
                           decoration: const BoxDecoration(
                             image: DecorationImage(
-                              image:
-                                  AssetImage("assets/images/bingkai.png"),
+                              image: AssetImage("assets/images/bingkai.png"),
                             ),
                           ),
-                          child: Center(child: Text("${surah.nomor}")),
+                          child: Center(child: W.text(data: "${surah.nomor}")),
+                          // child: Center(child: Text("${surah.nomor}")),
                         ),
-                        title: Text(surah.namaLatin,
-                            style:
-                                const TextStyle(fontWeight: FontWeight.w500)),
-                        subtitle: Text(
-                          "${surah.tempatTurun.toUpperCase()} - ${surah.jumlahAyat} AYAT",
-                          style:
-                              const TextStyle(fontSize: 12, color: Colors.grey),
-                        ), // <-- Pastikan ada koma di sini
-                        trailing: Text(
-                          surah.nama,
+                        title: W.text(
+                            data: surah.namaLatin, fontWeight: FontWeight.w500),
+                        // title: Text(surah.namaLatin,
+                        //     style:
+                        //         const TextStyle(fontWeight: FontWeight.w500)),
+                        subtitle: W.text(
+                            data:
+                                "${surah.tempatTurun.toUpperCase()} - ${surah.jumlahAyat} AYAT",
+                            fontSize: 12,
+                            color: Colors.grey),
+                        //   "${surah.tempatTurun.toUpperCase()} - ${surah.jumlahAyat} AYAT",
+                        //   style:
+                        //       const TextStyle(fontSize: 12, color: Colors.grey),
+                        // ), // <-- Pastikan ada koma di sini
+                        trailing: W.text(
+                          data: surah.nama,
                           style: const TextStyle(
                             fontFamily: 'LPMQ',
                             fontSize: 20,
-                            color: Color(0xFF672CBC),
+                            color: Colors.purple,
                           ),
                         ),
+                        //   surah.nama,
+                        //   style: const TextStyle(
+                        //     fontFamily: 'LPMQ',
+                        //     fontSize: 20,
+                        //     color: Color(0xFF672CBC),
+                        //   ),
+                        // ),
                       );
                     },
                   );
