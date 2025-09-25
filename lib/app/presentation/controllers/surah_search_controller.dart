@@ -2,21 +2,24 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../injection.dart'; // Import injection
 import '../../domain/entities/surah.dart';
 import 'home_controller.dart';
 
-// UBAH NAMA CLASS DI SINI
 class SurahSearchController extends GetxController {
-  final HomeController _homeController = Get.find<HomeController>();
+  // --- PERBAIKAN DI SINI ---
+  // Inisialisasi langsung, tidak menggunakan 'late'
+  final TextEditingController searchC = TextEditingController();
+  final HomeController _homeController = sl<HomeController>();
+  // ---
+
   var searchResults = <Surah>[].obs;
   var searchQuery = ''.obs;
-
-  late final TextEditingController searchC;
 
   @override
   void onInit() {
     super.onInit();
-    searchC = TextEditingController();
+    // Salin daftar surah lengkap saat controller diinisialisasi
     searchResults.assignAll(_homeController.surahList);
   }
 

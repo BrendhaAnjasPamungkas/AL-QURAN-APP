@@ -23,33 +23,43 @@ class QuranRemoteDataSourceImpl implements QuranRemoteDataSource {
 
   @override
   Future<List<SurahModel>> getAllSurah() async {
-    final response = await client.get(Uri.parse('$_baseUrl/surah'));
+    try {
+      final response = await client
+          .get(Uri.parse('$_baseUrl/surah'))
+          // --- TAMBAHKAN TIMEOUT DI SINI ---
+          .timeout(const Duration(seconds: 10)); 
 
-    if (response.statusCode == 200) {
-      final List<dynamic> data = json.decode(response.body);
-      return data.map((json) => SurahModel.fromJson(json)).toList();
-    } else {
-      // --- TAMBAHKAN PRINT DI SINI UNTUK MELIHAT DETAIL KEGAGALAN ---
-      print("Gagal terhubung ke API. Status Code: ${response.statusCode}");
-      print("Response Body: ${response.body}");
-      // ---
-      throw Exception('Failed to load surah');
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        return data.map((json) => SurahModel.fromJson(json)).toList();
+      } else {
+        throw Exception('Gagal memuat surah. Status Code: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Menangkap error timeout atau error lainnya
+      throw Exception('Tidak dapat terhubung ke server.');
     }
   }
 
-// ... (sisa kode)
 
   // Implementasi method baru
-  @override
+   @override
   Future<DetailSurahModel> getDetailSurah(int surahNumber) async {
-    final response = await client.get(Uri.parse('$_baseUrl/surah/$surahNumber'));
+    try {
+      final response = await client
+          .get(Uri.parse('$_baseUrl/surah/$surahNumber'))
+          // --- TAMBAHKAN TIMEOUT DI SINI ---
+          .timeout(const Duration(seconds: 10));
 
-    if (response.statusCode == 200) {
-      // API ini mengembalikan objek tunggal, bukan list
-      final Map<String, dynamic> data = json.decode(response.body);
-      return DetailSurahModel.fromJson(data);
-    } else {
-      throw Exception('Failed to load detail surah');
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        return DetailSurahModel.fromJson(data);
+      } else {
+        throw Exception('Gagal memuat detail surah');
+      }
+    } catch (e) {
+      // Menangkap error timeout atau error lainnya
+      throw Exception('Tidak dapat terhubung ke server.');
     }
   }
 }

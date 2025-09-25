@@ -13,28 +13,28 @@ class QuranRepositoryImpl implements QuranRepository {
   @override
   Future<List<Surah>> getAllSurah() async {
     try {
+      print("REPO: Memanggil remoteDataSource.getAllSurah()...");
       final surahModels = await remoteDataSource.getAllSurah();
-      return surahModels.map((model) => model.toEntity()).toList();
-    } catch (e, s) { // <-- Tambahkan 's' untuk melihat stack trace
-      // --- UBAH BAGIAN CATCH INI ---
+      print("REPO: Berhasil mendapatkan ${surahModels.length} model surah.");
+      final entities = surahModels.map((model) => model.toEntity()).toList();
+      print("REPO: Berhasil mengubah model ke entity.");
+      return entities;
+    } catch (e, s) {
       print("TERJADI ERROR DI REPOSITORY: $e");
-      print("STACK TRACE: $s"); // Stack trace sangat membantu debugging
-      // ---
-      throw Exception('Failed to load surah from repository');
+      print("STACK TRACE: $s");
+      throw Exception('Gagal memuat surah dari repository');
     }
   }
 
-  // Implementasi method baru
   @override
   Future<DetailSurah> getDetailSurah(int surahNumber) async {
+    // ... (kode ini bisa dibiarkan dulu)
     try {
       return await remoteDataSource.getDetailSurah(surahNumber);
-    } catch (e, s) { // <-- Tambahkan 'e' dan 's'
-      // --- TAMBAHKAN PRINT DI SINI ---
+    } catch (e, s) {
       print("TERJADI ERROR DI REPOSITORY (DETAIL): $e");
       print("STACK TRACE (DETAIL): $s");
-      // ---
-      throw Exception('Failed to load detail surah from repository');
+      throw Exception('Gagal memuat detail surah dari repository');
     }
   }
 }

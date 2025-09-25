@@ -1,22 +1,32 @@
 // lib/app/presentation/screens/dashboard_screen.dart
 
+import 'package:alquran/core/main_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/dashboard_controller.dart';
 import '../controllers/home_controller.dart'; // <-- INI IMPORT YANG HILANG
 import 'bookmark_screen.dart';
 import 'doa_screen.dart';
+import 'package:alquran/injection.dart';
 import 'home_screen.dart';
 import 'prayer_screen.dart';
 import 'tips_screen.dart';
 
-class DashboardScreen extends GetView<DashboardController> {
+class DashboardScreen extends StatelessWidget{
   const DashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Menemukan HomeController yang sudah didaftarkan di binding
-    final homeController = Get.find<HomeController>();
+    // Panggil controller di sini
+    final controller = sl<DashboardController>();
+    final homeController = sl<HomeController>();
+
+    // --- TAMBAHKAN PEMICU DI SINI ---
+    // Jika daftar surah kosong, panggil fetchSurah
+    if (homeController.surahList.isEmpty) {
+      homeController.fetchSurah();
+      homeController.getLastRead();
+    }
     const Color purpleColor = Color(0xFF672CBC);
     const Color greyColor = Color(0xFF8789A3);
 
@@ -65,11 +75,12 @@ class DashboardScreen extends GetView<DashboardController> {
         onPressed: () {},
         icon: Image.asset("assets/icons/menu.png"),
       ),
-      title: const Text(
-        "Quran App",
-        style: TextStyle(
-            color: purpleColor, fontWeight: FontWeight.bold, fontSize: 20),
-      ),
+      title: W.text(data: "Quran App", color: purpleColor, fontWeight: FontWeight.bold, fontSize: 20),
+      // title: const Text(
+      //   "Quran App",
+      //   style: TextStyle(
+      //       color: purpleColor, fontWeight: FontWeight.bold, fontSize: 20),
+      // ),
       actions: [
         Obx(() => IconButton(
               onPressed: homeController.isLoading.value

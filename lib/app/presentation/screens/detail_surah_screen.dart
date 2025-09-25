@@ -1,17 +1,28 @@
 // lib/app/presentation/screens/detail_surah_screen.dart
 
+import 'package:alquran/core/main_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/detail_surah_controller.dart';
+import 'package:alquran/injection.dart';
 
-class DetailSurahScreen extends GetView<DetailSurahController> {
+class DetailSurahScreen extends StatelessWidget {
   const DetailSurahScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = sl<DetailSurahController>();
+    
+    // --- TAMBAHKAN PEMICU FETCH DATA DI SINI ---
+    // Ambil argumen dan panggil method fetch
+    final int surahNumber = Get.arguments as int;
+    controller.fetchDetailSurah(surahNumber);
+    // ---
+
     return Scaffold(
       appBar: AppBar(
-        title: Obx(() => Text(controller.detailSurah.value?.namaLatin ?? 'Memuat...')),
+        title: Obx(
+            () => Text(controller.detailSurah.value?.namaLatin ?? 'Memuat...')),
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
@@ -46,7 +57,8 @@ class DetailSurahScreen extends GetView<DetailSurahController> {
                       bottom: 10, // Beri jarak dari bawah
                       left: 0,
                       right: 0,
-                      child: Center( // Gunakan Center agar Bismillah ke tengah
+                      child: Center(
+                        // Gunakan Center agar Bismillah ke tengah
                         child: Opacity(
                           opacity: 0.7,
                           child: Image.asset(
@@ -63,35 +75,51 @@ class DetailSurahScreen extends GetView<DetailSurahController> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            surah.namaLatin,
-                            style: const TextStyle(
+                          W.text(
+                              data: surah.namaLatin,
                               fontSize: 26,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
+                              color: Colors.white),
+                          // Text(
+                          //   surah.namaLatin,
+                          //   style: const TextStyle(
+                          //     fontSize: 26,
+                          //     fontWeight: FontWeight.bold,
+                          //     color: Colors.white,
+                          //   ),
+                          // ),
                           const SizedBox(height: 4),
-                          Text(
-                            surah.arti,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
+                          W.text(
+                            data: surah.arti,
+                            fontSize: 16,
+                            color: Colors.white,
                           ),
+                          // Text(
+                          //   surah.arti,
+                          //   style: const TextStyle(
+                          //     fontSize: 16,
+                          //     color: Colors.white,
+                          //   ),
+                          // ),
                           Divider(
                             color: Colors.white.withOpacity(0.35),
                             thickness: 1,
                             height: 32,
                           ),
-                          Text(
-                            "${surah.tempatTurun.toUpperCase()} • ${surah.jumlahAyat} AYAT",
-                            style: const TextStyle(
+                          W.text(
+                              data:
+                                  "${surah.tempatTurun.toUpperCase()} * ${surah.jumlahAyat} AYAT",
                               fontWeight: FontWeight.w500,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(height: 32), // Beri ruang ekstra di bawah teks
+                              color: Colors.white),
+                          // Text(
+                          //   "${surah.tempatTurun.toUpperCase()} • ${surah.jumlahAyat} AYAT",
+                          //   style: const TextStyle(
+                          //     fontWeight: FontWeight.w500,
+                          //     color: Colors.white,
+                          //   ),
+                          // ),
+                          const SizedBox(
+                              height: 32), // Beri ruang ekstra di bawah teks
                         ],
                       ),
                     ),
@@ -143,17 +171,27 @@ class DetailSurahScreen extends GetView<DetailSurahController> {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  Text(
-                    ayat.teksArab,
+                  W.text(
+                    data: ayat.teksArab,
                     textAlign: TextAlign.right,
-                    style: const TextStyle(fontFamily: 'LPMQ', fontSize: 24, height: 2.0),
+                    style: const TextStyle(
+                        fontFamily: 'LPMQ', fontSize: 24, height: 2.0),
                   ),
+                  // Text(
+                  //   ayat.teksArab,
+                  //   textAlign: TextAlign.right,
+                  //   style: const TextStyle(fontFamily: 'LPMQ', fontSize: 24, height: 2.0),
+                  // ),
                   const SizedBox(height: 16),
-                  Text(
-                    ayat.teksIndonesia,
-                    textAlign: TextAlign.left,
-                    style: TextStyle(color: Colors.grey[600]),
-                  ),
+                  W.text(
+                      data: ayat.teksIndonesia,
+                      textAlign: TextAlign.left,
+                      color: Colors.grey[600]),
+                  // Text(
+                  //   ayat.teksIndonesia,
+                  //   textAlign: TextAlign.left,
+                  //   style: TextStyle(color: Colors.grey[600]),
+                  // ),
                 ],
               ),
             );

@@ -1,5 +1,3 @@
-// lib/app/data/models/ayat_model.dart
-
 import '../../domain/entities/ayat.dart';
 import 'package:equatable/equatable.dart';
 
@@ -9,7 +7,7 @@ class AyatModel extends Equatable {
   final String teksLatin;
   final String teksIndonesia;
 
-  const AyatModel({
+  const AyatModel({ // <-- Pastikan ada 'const' di sini
     required this.nomorAyat,
     required this.teksArab,
     required this.teksLatin,
@@ -17,11 +15,7 @@ class AyatModel extends Equatable {
   });
 
   factory AyatModel.fromJson(Map<String, dynamic> json) {
-    // Tidak perlu print lagi
-    // print(json);
-    
     return AyatModel(
-      // --- SESUAIKAN KEY DENGAN OUTPUT DEBUG CONSOLE ---
       nomorAyat: json['nomor'] ?? 0,
       teksArab: json['ar'] ?? '',
       teksLatin: json['tr'] ?? '',
